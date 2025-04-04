@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Charity Login</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      transition: all 0.3s ease;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #ffe0c3, #ffd1dc);
+    }
+
+    .header {
+      background: #fff;
+      padding: 15px 30px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header h1 {
+      font-size: 26px;
+      color: #d68242;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 30px;
+    }
+
+    .content {
+      display: flex;
+      width: 80%;
+      max-width: 1000px;
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      animation: slideIn 0.6s ease;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .text-section {
+      width: 60%;
+      padding: 20px;
+    }
+
+    .text-section h2 {
+      font-size: 30px;
+      color: #333;
+    }
+
+    .text-section p {
+      color: #666;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .buttons {
+      margin-top: 20px;
+    }
+
+    .buttons button {
+      padding: 12px 24px;
+      border: 2px solid #d68242;
+      background: transparent;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      color: #d68242;
+      margin-right: 10px;
+      border-radius: 6px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .buttons button:hover {
+      background-color: #d68242;
+      color: #fff;
+      transform: scale(1.05);
+    }
+
+    .image-section {
+      width: 40%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .image-section img {
+      width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(12px);
+      padding: 25px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      width: 320px;
+      border-radius: 15px;
+      text-align: center;
+      z-index: 1001;
+      opacity: 0;
+      transition: all 0.4s ease;
+    }
+
+    .popup.show {
+      display: block;
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+    }
+
+    .popup h3 {
+      margin-bottom: 15px;
+      color: #333;
+    }
+
+    .popup input {
+      width: 90%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background-color: rgba(255, 255, 255, 0.85);
+    }
+
+    .popup input:focus {
+      border-color: #d68242;
+      outline: none;
+    }
+
+    .popup button {
+      padding: 10px;
+      background: #d68242;
+      border: none;
+      color: white;
+      width: 100%;
+      cursor: pointer;
+      border-radius: 8px;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    .popup .close {
+      background: none;
+      border: none;
+      font-size: 20px;
+      color: red;
+      float: right;
+      cursor: pointer;
+      margin-top: -5px;
+      margin-right: -5px;
+      width: 15px;
+      border-radius: 50px;
+      height: 15px;
+    }
+
+
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      backdrop-filter: blur(3px);
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 1000;
+    }
+
+    .overlay.show {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>FOOD SHARE</h1>
+  </div>
+
+  <div class="container">
+    <div class="content">
+      <div class="text-section">
+        <h2>MAKE IT DIFFERENCE</h2>
+        <p>Join us in making a difference. Whether you want to volunteer your time or make a donation, we are here to help you contribute in the best way possible.</p>
+        <div class="buttons">
+          <button onclick="openPopup('signup')">Sign up</button>
+          <button onclick="openPopup('login')">Login</button>
+        </div>
+      </div>
+      <div class="image-section">
+        <img src="donate.avif" alt="Volunteer">
+      </div>
+    </div>
+  </div>
+
+  <!-- Overlay -->
+  <div class="overlay" id="overlay" onclick="closeAllPopups()"></div>
+
+  <!-- Login Popup -->
+  <div class="popup" id="loginPopup">
+    <button class="close" onclick="closeAllPopups()" align-item="right">×</button>
+    <h3 id="loginTitle">Login</h3>
+    <input type="text" placeholder="Username" required>
+    <input type="email" placeholder="Email" required>
+    <input type="password" placeholder="Password" required>
+    <button onclick="login()">Login</button>
+    <p>Not Registered? <span>Sign Up</span></p>
+  </div>
+
+  <!-- Sign Up Popup -->
+  <div class="popup" id="signupPopup">
+    <button class="close" onclick="closeAllPopups()" align-item="right">×</button>
+    <h3>Sign Up</h3>
+    <input type="text" placeholder="Full Name" required>
+    <input type="email" placeholder="Email Address" required>
+    <input type="password" placeholder="Create Password" required>
+    <input type="text" placeholder="Business/Individual">
+    <input type="text" placeholder="Organization Name (if any)">
+    <input type="text" placeholder="Contact Number" required>
+    <input type="text" placeholder="City / State" required>
+    <button onclick="login()">Sign Up</button>
+    <p>Already Register? <span>Login</span></p>
+  </div>
+
+  <script>
+    const overlay = document.getElementById("overlay");
+    const loginPopup = document.getElementById("loginPopup");
+    const signupPopup = document.getElementById("signupPopup");
+
+    function openPopup(type) {
+      if (type === "login") {
+        loginPopup.classList.add("show");
+        greetUser("loginTitle");
+      } else if (type === "signup") {
+        signupPopup.classList.add("show");
+      }
+      overlay.classList.add("show");
+    }
+
+    function closeAllPopups() {
+      loginPopup.classList.remove("show");
+      signupPopup.classList.remove("show");
+      overlay.classList.remove("show");
+    }
+
+    function greetUser(titleId) {
+      const hours = new Date().getHours();
+      let greeting = "Welcome!";
+      if (hours < 12) greeting = "Good Morning!";
+      else if (hours < 18) greeting = "Good Afternoon!";
+      else greeting = "Good Evening!";
+      document.getElementById(titleId).innerText = greeting;
+    }
+
+    // Login Validation
+    const loginBtn = loginPopup.querySelector("button:last-of-type");
+    loginBtn.addEventListener("click", function () {
+      const inputs = loginPopup.querySelectorAll("input");
+      let allFilled = true;
+
+      inputs.forEach(input => {
+        if (input.value.trim() === "") {
+          input.style.borderColor = "red";
+          input.placeholder = "Required!";
+          allFilled = false;
+        } else {
+          input.style.borderColor = "#d68242";
+        }
+      });
+
+      if (allFilled) {
+        loginBtn.innerText = "Logging in...";
+        setTimeout(() => {
+          alert("Login successful! Welcome to Food Share.");
+          closeAllPopups();
+          loginBtn.innerText = "Login";
+        }, 1000);
+      }
+    });
+
+    // Sign Up Validation
+    const signupBtn = signupPopup.querySelector("button:last-of-type");
+    signupBtn.addEventListener("click", function () {
+      const inputs = signupPopup.querySelectorAll("input");
+      let allFilled = true;
+
+      inputs.forEach(input => {
+        if (input.value.trim() === "" && input.hasAttribute("required")) {
+          input.style.borderColor = "red";
+          input.placeholder = "Required!";
+          allFilled = false;
+        } else {
+          input.style.borderColor = "#d68242";
+        }
+      });
+     
+      if (allFilled) {
+        signupBtn.innerText = "Signing up...";
+        setTimeout(() => {
+          alert("Sign up successful! Welcome to Food Share.");
+          closeAllPopups();
+          signupBtn.innerText = "Sign Up";
+        }, 1000);
+      }
+    });
+
+    function login(){
+      alert("Sign up Successful! Welcome To Food Share.");
+      window.location.href = "reg.html";
+    }
+  </script>
+</body>
+</html>

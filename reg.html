@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Share At Door Step</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <!-- Leaflet CSS (For OpenStreetMap) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+            text-align: center;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            width: 80px;
+            margin-right: 10px;
+        }
+
+        .logo span {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .icons i {
+            font-size: 20px;
+            margin-left: 15px;
+            cursor: pointer;
+            color: black;
+        }
+
+        nav {
+            background-color: transparent;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            padding: 10px 0;
+        }
+        
+        nav ul {
+            list-style-type: none;
+            display: flex;
+            justify-content: center;
+            padding: 15px 0;
+            margin: 0;
+            gap: 70px; /* Increased space between nav items */
+        }
+        
+        nav ul li {
+            font-weight: bold;
+        }
+        
+        nav ul li a {
+            text-decoration: none;
+            color: gray;
+            transition: color 0.3s ease;
+            font-size: 16px;
+            padding: 5px 10px;
+        }
+        
+        nav ul li a:hover,
+        nav ul li a:focus {
+            color: orange;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            display: flex;
+            justify-content: space-around;
+            background: white;
+            padding: 15px;
+            font-weight: bold;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .progress-bar :hover {
+            color: orange;
+            font-weight: bold;
+            font-size: 17px;
+            transition: .5s;
+        }
+
+        /* Main Container */
+        .container {
+            background: white;
+            padding: 30px;
+            margin: 20px auto;
+            width: 50%;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: black;
+        }
+
+        p {
+            color: gray;
+            font-size: 14px;
+        }
+
+        .search-box {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .search-box input {
+            width: 70%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        .search-box button {
+            padding: 10px 20px;
+            background-color: orange;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-left: 10px;
+            border-radius: 5px;
+        }
+
+        .auto-detect {
+            margin-top: 10px;
+        }
+
+        .auto-detect a {
+            color: orange;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* Map Section */
+        #map-container {
+            display: none;
+            margin-top: 20px;
+        }
+
+        #drag-message {
+            background-color: white;
+            padding: 5px;
+            font-size: 14px;
+            display: inline-block;
+            margin-bottom: 5px;
+        }
+
+        #map {
+            width: 100%;
+            height: 300px;
+            border-radius: 5px;
+        }
+
+        #proceed-btn {
+            padding: 10px 20px;
+            background-color: orange;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 15px;
+            border-radius: 5px;
+        }
+
+        .donation-details {
+            margin-top: 40px;
+            padding: 30px;
+            text-align: left;
+            max-height: 500px;
+            overflow-y: auto;
+            background-color: #fff8f0;
+        }
+        
+        .donation-details form {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .donation-details label {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        
+        .donation-details input,
+        .donation-details select,
+        .donation-details textarea {
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .donation-details button {
+            margin-top: 20px;
+            padding: 12px;
+            background-color: orange;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        /* Food Pickup Section */
+.pickup-section {
+    background: #fff;
+    margin: 40px auto;
+    padding: 30px;
+    width: 60%;
+    max-height: 500px;
+    overflow-y: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    text-align: left;
+}
+
+.pickup-section h2 {
+    color: #333;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.pickup-section p {
+    color: #555;
+    font-size: 14px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.pickup-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.pickup-form label {
+    margin: 10px 0 5px;
+    font-weight: bold;
+    color: #444;
+}
+
+.pickup-form input,
+.pickup-form textarea {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    resize: vertical;
+}
+
+.pickup-form button {
+    margin-top: 20px;
+    padding: 12px;
+    background-color: orange;
+    border: none;
+    color: white;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.pickup-form button:hover {
+    background-color: rgb(213, 119, 3);
+}
+
+button a{
+    color: white;
+    text-decoration: none;
+}
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <img src="logo.png" alt="FS Logo">
+            <span>FOOD SHARE</span>
+        </div>
+        <div class="icons">
+            <i class="fas fa-phone"></i>
+            <i class="fas fa-user"></i>
+            <a href="https://wa.me/919443176161" target="_blank"><i class="fab fa-whatsapp"></i></a>
+        </div>
+    </header>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar">
+        <nav>
+            <ul>
+                <li><a href="#choose">Choose Service</a></li>
+                <li><a href="#details">Donation Details</a></li>
+                <li><a href="#schedule">Schedule Pickup</a></li>
+                <li><a href="#verification">Donor Verification</a></li>
+                <li><a href="place.html">Place Order</a></li>
+            </ul>
+        </nav>
+        
+    </div>
+
+    <!-- Main Container -->
+     
+    <div class="container" id="choose">
+        <h2>HELP US WITH YOUR EXACT LOCATION</h2>
+        <p>This allows us to check if your area is within our coverage</p>
+
+        <div class="search-box">
+            <input id="location-input" type="text" placeholder="Building name, Block #, Area...">
+            <button onclick="searchLocation()">SEARCH</button>
+        </div>
+
+        <div class="auto-detect">
+            <span>OR</span>
+            <a href="#" onclick="autoDetectLocation()">Auto-Detect Location</a>
+        </div>
+
+        <!-- Map Container -->
+        <div id="map-container">
+            <p id="drag-message">Drag marker to your precise location</p>
+            <div id="map"></div>
+        </div>
+
+        <p>Please verify the location marked above before proceeding</p>
+        <button id="proceed-btn"><a href="#details">PROCEED</a></button>
+    </div>
+
+    <!-- Add this after the location section, inside <body> -->
+
+<!-- Donation Details Section -->
+<div class="container donation-details" id="details">
+    <h2>FOOD DONATION DETAILS</h2>
+    <p>Please fill out the details about the food items you're planning to donate</p>
+
+    <form id="donation-form">
+        <label for="food-type">Type of Food:</label>
+        <select id="food-type" name="food-type" required>
+            <option value="" disabled selected>Select</option>
+            <option value="cooked">Cooked Food</option>
+            <option value="packaged">Packaged Food</option>
+            <option value="grains">Grains / Rice / Pulses</option>
+            <option value="fruits">Fruits / Vegetables</option>
+        </select>
+
+        <label for="quantity">Quantity (Approximate):</label>
+        <input type="text" id="quantity" name="quantity" placeholder="e.g. 5 kg, 10 packets" required>
+
+        <label for="expiry">Expiry / Best Before:</label>
+        <input type="date" id="expiry" name="expiry" required>
+
+        <label for="additional-info">Additional Notes:</label>
+        <textarea id="additional-info" name="additional-info" placeholder="Mention food condition, packaging, etc." rows="4"></textarea>
+
+        <button type="submit"><a href="#schedule">SUBMIT DETAILS</a></button>
+    </form>
+</div>
+
+<!-- Schedule Pickup Section -->
+<div class="pickup-section" id="schedule">
+    <h2>Schedule Your Food Donation Pickup</h2>
+    <p>Please fill in the details below so we can arrange a pickup at your convenience.</p>
+
+    <form class="pickup-form">
+        <label for="donor-name">Your Name:</label>
+        <input type="text" id="donor-name" name="donor-name" required>
+
+        <label for="donor-phone">Phone Number:</label>
+        <input type="tel" id="donor-phone" name="donor-phone" required>
+
+        <label for="donation-items">Items You Are Donating:</label>
+        <textarea id="donation-items" name="donation-items" rows="4" placeholder="e.g., Cooked rice, vegetables, bread..."></textarea>
+
+        <label for="pickup-date">Preferred Pickup Date:</label>
+        <input type="date" id="pickup-date" name="pickup-date" required>
+
+        <label for="pickup-time">Preferred Time:</label>
+        <input type="time" id="pickup-time" name="pickup-time" required>
+
+        <button type="submit"><a href="#verification">Schedule Pickup</a></button>
+    </form>
+</div>
+
+ <!-- Donor Verification Section -->
+<div style="background: #fff; margin: 20px auto; padding: 30px; border-radius: 10px; width: 80%; max-height: 500px; overflow-y: auto; box-shadow: 0 4px 10px rgba(0,0,0,0.1);" id="verification">
+    <h2 style="color: black; text-align: center;">Donor Verification - Food Donation</h2>
+    <p style="color: gray; font-size: 14px; text-align: center;">Please review the below checklist and upload a verification photo before proceeding.</p>
+
+    <ul style="text-align: left; margin-top: 20px; line-height: 1.8; font-size: 15px; color: #333;">
+        <li>✅ The food is freshly prepared and packed.</li>
+        <li>✅ No expired or stale food items.</li>
+        <li>✅ Food is securely packaged and free from leaks or contamination.</li>
+        <li>✅ Vegetarian and non-vegetarian items are labeled clearly.</li>
+        <li>✅ Quantity is sufficient to serve at least 2 or more people.</li>
+        <li>✅ You agree that the donation will be handed over responsibly to our pickup agent.</li>
+    </ul>
+
+    <div style="margin-top: 30px; text-align: center;">
+        <button onclick="verifyDonor()" style="padding: 12px 25px; background-color: orange; color: white; border: none; border-radius: 5px; cursor: pointer;">CONTINUE</button>
+    </div>
+</div>
+
+
+
+
+    <!-- Leaflet JS (For OpenStreetMap) -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        let map, marker;
+
+        function initMap(lat = 10.9601, lng = 78.0766) {
+            if (!map) {
+                map = L.map('map').setView([lat, lng], 15);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; OpenStreetMap contributors'
+                }).addTo(map);
+                
+                marker = L.marker([lat, lng], { draggable: true }).addTo(map);
+                marker.on('dragend', function () {
+                    let pos = marker.getLatLng();
+                    console.log("New position:", pos.lat, pos.lng);
+                });
+
+                document.getElementById("map-container").style.display = "block";
+            } else {
+                map.setView([lat, lng], 15);
+                marker.setLatLng([lat, lng]);
+            }
+        }
+
+        function searchLocation() {
+            let location = document.getElementById("location-input").value;
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${location}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length > 0) {
+                        let lat = data[0].lat;
+                        let lng = data[0].lon;
+                        initMap(lat, lng);
+                    } else {
+                        alert("Location not found.");
+                    }
+                })
+                .catch(error => alert("Error fetching location: " + error));
+        }
+
+        function autoDetectLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    let lat = position.coords.latitude;
+                    let lng = position.coords.longitude;
+                    initMap(lat, lng);
+                }, function () {
+                    alert("Geolocation failed. Please enter your address manually.");
+                });
+            } else {
+                alert("Geolocation is not supported by your browser.");
+            }
+        }
+
+        window.onload = function () {
+            initMap();
+        };
+
+        document.getElementById("donation-form").addEventListener("submit", function (e) {
+            e.preventDefault();
+            alert("Donation details submitted successfully!");
+            // You can store data or send it to the backend here
+        });
+
+        function verifyDonor() {
+            alert("Thank you for your donations.");
+            window.location.href = "place.html";
+            // You can redirect or move to the next step here
+        }
+
+        function click(){
+            alert("Your Pickup has been scheduled and complete the verification.");
+        }
+           
+        
+    </script>
+
+</body>
+</html>

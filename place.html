@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Place Order - Share At Door Step</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f8f8f8;
+      overflow-x: hidden;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      background: white;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo img {
+      width: 60px;
+      margin-right: 10px;
+    }
+
+    .logo span {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .icon a i{
+        color: black;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 800px;
+      background: white;
+      margin: 30px auto;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    p {
+      color: #666;
+      font-size: 15px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    input, select, textarea {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    button {
+      padding: 12px;
+      background-color: orange;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 15px;
+    }
+
+    button:hover {
+      background-color: darkorange;
+    }
+
+    .confirmation {
+      display: none;
+      padding: 20px;
+      background-color: #e6ffed;
+      color: #0a8a4d;
+      font-weight: bold;
+      margin-top: 20px;
+      border-left: 5px solid #0a8a4d;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">
+      <img src="logo.png" alt="SADS Logo" />
+      <span>FOOD SHARE</span>
+    </div>
+    <div class="icons">
+      <i class="fas fa-phone"></i>
+      <i class="fas fa-user"></i>
+      <a href="https://wa.me/919443176161" target="_blank"><i class="fab fa-whatsapp"></i></a>
+    </div>
+  </header>
+
+  <div class="container">
+    <h2>Place Your Food Donation Order</h2>
+    <p>Please provide the following details to schedule your donation pickup:</p>
+
+    <form id="place-order-form">
+      <input type="text" placeholder="Full Name" required />
+      <input type="tel" placeholder="Mobile Number" required />
+      <input type="text" placeholder="Full Address for Pickup" required />
+      <select required>
+        <option value="">Select Type of Food</option>
+        <option value="cooked">Cooked Food</option>
+        <option value="packaged">Packaged Food</option>
+        <option value="grains">Grains & Staples</option>
+      </select>
+      <textarea rows="4" placeholder="Additional Instructions (Optional)"></textarea>
+      <button type="submit">Confirm Order</button>
+    </form>
+
+    <div class="confirmation" id="confirmation-box">
+      ✅ Thank you! Your food donation order has been placed. Our team will get in touch soon.
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById("place-order-form");
+    const confirmation = document.getElementById("confirmation-box");
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      form.style.display = "none";
+      confirmation.style.display = "block";
+    });
+  </script>
+
+</body>
+</html>
